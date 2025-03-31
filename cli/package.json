@@ -19,7 +19,7 @@
     },
     "devDependencies": {
         "@types/fs-extra": "^11.0.4",
-        "commander": "^12.1.0",
+        "commander": "^13.0.0",
         "ts-node": "^10.9.2",
         "tsup": "^8.2.4",
         "typescript": "^5.5.4"
