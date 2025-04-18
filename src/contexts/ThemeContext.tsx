@@ -87,7 +87,7 @@ export function ThemeProvider(props: ThemeContextProps) {
 
 export const useTheme = () => useContext(ThemeContext);
 
-export const withThemeContext = (Page: (...props: any) => JSX.Element) =>
+export const withThemeContext = (Page: (...props: any) => React.JSX.Element) =>
 	function PageWithThemeProvider(...props: any) {
 		return (
 			<ThemeProvider>

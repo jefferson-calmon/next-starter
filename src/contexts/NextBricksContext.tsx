@@ -40,7 +40,9 @@ export function NextBricksContextProvider(props: NextBricksContextProps) {
 
 export const useNextBricks = () => useContext(NextBricksContext);
 
-export const withNextBricksContext = (Page: (...props: any) => JSX.Element) =>
+export const withNextBricksContext = (
+	Page: (...props: any) => React.JSX.Element,
+) =>
 	function PageWithNextBricksContextProvider(...props: any) {
 		return (
 			<NextBricksContextProvider>

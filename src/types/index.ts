@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type Children = React.ReactNode | JSX.Element;
+export type Children = React.ReactNode | React.JSX.Element;
 
 export interface LayoutProps {
 	children: Children;

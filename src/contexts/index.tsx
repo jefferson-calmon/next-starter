@@ -1,10 +1,10 @@
 import { NextBricksContextProvider } from './NextBricksContext';
 
 interface ContextProvidersProps {
-	children: JSX.Element | React.ReactNode;
+	children: React.JSX.Element | React.ReactNode;
 }
 
-export function ContextProviders(props: ContextProvidersProps): JSX.Element {
+export function ContextProviders(props: ContextProvidersProps) {
 	return (
 		<NextBricksContextProvider>{props.children}</NextBricksContextProvider>
 	);
