@@ -1,5 +1,3 @@
-import { env } from './env';
-
 const APP_URL = new URL(
 	process.env.APP_URL ?? 'https://example.com',
 ).toString();
@@ -33,5 +31,6 @@ export const app = {
 		name: '',
 		url: APP_URL,
 	},
-	googleSiteVerificationId: env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION_ID ?? '',
+	googleSiteVerificationId:
+		process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION_ID ?? '',
 };
