@@ -5,10 +5,12 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { cookies, useSystemTheme } from 'codekit';
 
-import { Theme, ThemeName, themes } from '../styles/themes';
+import { parseThemeToStyle } from 'helpers/theme/parseThemeToStyle';
+import { Theme, THEME_COOKIE_KEY, ThemeName, themes } from '../styles/themes';
 
 interface ThemeContextProps {
 	children: React.ReactNode;
+	currentTheme: Theme;
 }
 
 export interface ThemeContextData extends Theme {
@@ -17,12 +19,11 @@ export interface ThemeContextData extends Theme {
 
 export const ThemeContext = createContext({} as ThemeContextData);
 
-const DEFAULT_THEME_NAME: ThemeName = 'light';
 const AUTO_DETECT_USER_THEME: boolean = false;
 
 export function ThemeProvider(props: ThemeContextProps) {
 	// States
-	const [theme, setTheme] = useState<ThemeName>(DEFAULT_THEME_NAME);
+	const [theme, setTheme] = useState<ThemeName>(props.currentTheme.name);
 
 	// Hook para escutar o tema do sistema
 	const systemTheme = useSystemTheme();
@@ -32,15 +33,10 @@ export function ThemeProvider(props: ThemeContextProps) {
 
 	// Effects
 	useEffect(() => {
-		let theme = cookies.get('theme') as ThemeName | undefined;
+		if (!AUTO_DETECT_USER_THEME) return;
 
-		if (!theme && AUTO_DETECT_USER_THEME) {
-			// Usa o tema do sistema caso não haja tema armazenado
-			theme = systemTheme;
-		}
-
-		setTheme(theme ?? DEFAULT_THEME_NAME);
-	}, [systemTheme]); // Dependência adicionada para atualizar quando o tema do sistema mudar
+		setTheme(systemTheme);
+	}, [systemTheme]);
 
 	// Functions
 	function toggleTheme() {
@@ -48,9 +44,7 @@ export function ThemeProvider(props: ThemeContextProps) {
 
 		setTheme(newTheme);
 
-		// Store the new theme in local storage and cookies
-		localStorage.setItem('theme', newTheme);
-		cookies.set('theme', newTheme, {
+		cookies.set(THEME_COOKIE_KEY, newTheme, {
 			expires: 9999,
 		});
 	}
@@ -64,20 +58,7 @@ export function ThemeProvider(props: ThemeContextProps) {
 		>
 			<div
 				className="theme-provider"
-				style={
-					{
-						'--color-primary': currentTheme.colors.primary,
-						'--color-secondary': currentTheme.colors.secondary,
-
-						'--color-title': currentTheme.colors.title,
-						'--color-text': currentTheme.colors.text,
-
-						'--color-foreground': currentTheme.colors.foreground,
-						'--color-background': currentTheme.colors.background,
-
-						'--color-line': currentTheme.colors.line,
-					} as React.CSSProperties
-				}
+				style={{ ...parseThemeToStyle(currentTheme) }}
 			>
 				{props.children}
 			</div>
@@ -86,14 +67,3 @@ export function ThemeProvider(props: ThemeContextProps) {
 }
 
 export const useTheme = () => useContext(ThemeContext);
-
-export const withThemeContext = (Page: (...props: any) => React.JSX.Element) =>
-	function PageWithThemeProvider(...props: any) {
-		return (
-			<ThemeProvider>
-				<div>
-					<Page {...props} />
-				</div>
-			</ThemeProvider>
-		);
-	};

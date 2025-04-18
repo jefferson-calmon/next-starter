@@ -1,11 +1,18 @@
+import { Theme } from 'styles/themes';
 import { NextBricksContextProvider } from './NextBricksContext';
+import { ThemeProvider } from './ThemeContext';
 
 interface ContextProvidersProps {
-	children: React.JSX.Element | React.ReactNode;
+	theme: Theme;
+	children: React.ReactNode;
 }
 
 export function ContextProviders(props: ContextProvidersProps) {
 	return (
-		<NextBricksContextProvider>{props.children}</NextBricksContextProvider>
+		<ThemeProvider currentTheme={props.theme}>
+			<NextBricksContextProvider>
+				{props.children}
+			</NextBricksContextProvider>
+		</ThemeProvider>
 	);
 }
