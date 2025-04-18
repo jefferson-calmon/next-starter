@@ -12,7 +12,7 @@ import styles from './styles.module.css';
 
 const timeoutInSeconds = 15;
 
-function LoadingFullScreen(): JSX.Element {
+function LoadingFullScreen() {
 	// Boolean hooks
 	const timeout = useBoolean(false);
 

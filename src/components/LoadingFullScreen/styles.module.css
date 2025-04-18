@@ -28,8 +28,8 @@
 	margin-top: 2rem;
 
 	text-align: center;
+}
 
-	p {
-		line-height: 1.4;
-	}
+.loadingFullScreen .text p {
+    line-height: 1.4;
 }

@@ -8,7 +8,8 @@ import 'next-bricks/dist/index.css';
 import NavigationProgressBar from 'components/NavigationProgressBar';
 import { app } from 'config/app';
 import { ContextProviders } from 'contexts';
-import { ThemeProvider } from 'contexts/ThemeContext';
+import { getServerTheme } from 'helpers/theme/getServerTheme';
+import { parseThemeToStyle } from 'helpers/theme/parseThemeToStyle';
 import { font } from 'styles/font';
 
 type RootLayoutProps = Readonly<{
@@ -63,16 +64,23 @@ export const metadata: Metadata = {
 	manifest: '/site.webmanifest',
 };
 
-export default function RootLayout({ children }: RootLayoutProps) {
-	return (
-		<html lang="pt-BR" className={font.className}>
-			<body>
-				<ThemeProvider>
-					<NavigationProgressBar />
-					<CodeKitConfig />
+export default async function RootLayout({ children }: RootLayoutProps) {
+	const theme = await getServerTheme();
 
-					<ContextProviders>{children}</ContextProviders>
-				</ThemeProvider>
+	return (
+		<html
+			lang="pt-BR"
+			className={font.className}
+			style={{ ...parseThemeToStyle(theme) }}
+			suppressHydrationWarning
+		>
+			<body suppressHydrationWarning>
+				<NavigationProgressBar />
+				<CodeKitConfig />
+
+				<ContextProviders theme={theme}>
+					<div id="app">{children}</div>
+				</ContextProviders>
 			</body>
 		</html>
 	);
