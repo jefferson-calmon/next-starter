@@ -10,13 +10,8 @@ export const declarations = {
 	logout: {},
 };
 
-export const references: Record<Keys<typeof declarations>, string> = {
-	'#': '',
-	'*': '',
-	'/': '',
-
-	logout: 'Sair da conta',
-};
+export const references: Partial<Record<Keys<typeof declarations>, string>> =
+	{};
 
 export const formattedRoutes = generate(declarations, relations);
 
