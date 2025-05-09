@@ -13,7 +13,7 @@
     },
     "dependencies": {
         "@jefferson-calmon/eslint-config": "^1.3.0",
-        "@t3-oss/env-nextjs": "^0.12.0",
+        "@t3-oss/env-nextjs": "^0.13.0",
         "base-x": "^5.0.0",
         "codekit": "^2.23.0",
         "framer-motion": "^12.0.0",
