@@ -1,0 +1,21 @@
+.input .nb-input-addon svg {
+    stroke: #a1a1aa;
+    transition: 200ms;
+}
+
+.input[data-addon-active='true'] .nb-input-addon svg {
+    stroke: var(--color-primary);
+}
+
+input::placeholder {
+    color: #a1a1aa !important;
+    opacity: .7 !important;
+}
+
+@media (width<=600px) {
+    .input {
+        --nb-base-height: 44px !important;
+
+        font-size: 26px;
+    }
+}
