@@ -5,7 +5,7 @@ import type { Metadata, Viewport } from 'next';
 import { CodeKitConfig } from 'codekit';
 import 'next-bricks/dist/index.css';
 
-import NavigationProgressBar from 'components/NavigationProgressBar';
+import { NavigationProgress } from 'components/navigation-progress';
 import { app } from 'config/app';
 import { font } from 'styles/font';
 
@@ -65,7 +65,7 @@ export default function Layout(props: LayoutProps) {
 	return (
 		<html lang="pt-BR" className={font.className} suppressHydrationWarning>
 			<body suppressHydrationWarning>
-				<NavigationProgressBar />
+				<NavigationProgress />
 				<CodeKitConfig />
 
 				{props.children}
