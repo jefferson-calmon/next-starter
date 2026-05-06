@@ -7,12 +7,9 @@ import 'next-bricks/dist/index.css';
 
 import NavigationProgressBar from 'components/NavigationProgressBar';
 import { app } from 'config/app';
-import { ContextProviders } from 'contexts';
-import { getServerTheme } from 'helpers/theme/getServerTheme';
-import { parseThemeToStyle } from 'helpers/theme/parseThemeToStyle';
 import { font } from 'styles/font';
 
-type RootLayoutProps = Readonly<{
+type LayoutProps = Readonly<{
 	children: React.ReactNode;
 }>;
 
@@ -64,23 +61,14 @@ export const metadata: Metadata = {
 	manifest: '/site.webmanifest',
 };
 
-export default async function RootLayout({ children }: RootLayoutProps) {
-	const theme = await getServerTheme();
-
+export default function Layout(props: LayoutProps) {
 	return (
-		<html
-			lang="pt-BR"
-			className={font.className}
-			style={{ ...parseThemeToStyle(theme) }}
-			suppressHydrationWarning
-		>
+		<html lang="pt-BR" className={font.className} suppressHydrationWarning>
 			<body suppressHydrationWarning>
 				<NavigationProgressBar />
 				<CodeKitConfig />
 
-				<ContextProviders theme={theme}>
-					<div id="app">{children}</div>
-				</ContextProviders>
+				{props.children}
 			</body>
 		</html>
 	);
