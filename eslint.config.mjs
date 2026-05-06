@@ -1,5 +1,7 @@
 import js from '@eslint/js';
-import { defineConfig } from 'eslint/config';
+import { defineConfig, globalIgnores } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
 import pluginJsxA11y from 'eslint-plugin-jsx-a11y';
 import pluginPrettier from 'eslint-plugin-prettier';
 import pluginReact from 'eslint-plugin-react';
@@ -9,34 +11,49 @@ import pluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+console.log('Loading ESLint configuration...');
+// console.log(...nextTs);
+
 export default defineConfig([
-	// IGNORAR diretórios pesados
-	{
-		ignores: [
-			'**/node_modules/**',
-			'**/.git/**',
-			'**/.next/**',
-			'**/out/**',
-			'**/dist/**',
-			'**/build/**',
-			'**/coverage/**',
-			'**/.turbo/**',
-			'**/.cache/**',
-			'**/public/**',
-			'**/storybook-static/**',
-			'src/generated/**',
-		],
-	},
+	// Next presets
+	...nextVitals,
+	...nextTs,
+
+	// Ignores (Next + seus diretórios pesados)
+	globalIgnores([
+		// Default ignores of eslint-config-next
+		'.next/**',
+		'out/**',
+		'build/**',
+		'next-env.d.ts',
+
+		// Seus ignores
+		'**/node_modules/**',
+		'**/.git/**',
+		'**/dist/**',
+		'**/coverage/**',
+		'**/.turbo/**',
+		'**/.cache/**',
+		'**/public/**',
+		'**/storybook-static/**',
+		'src/generated/**',
+	]),
+
+	// Base JS recommended
 	{
 		files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
 		plugins: { js },
 		extends: ['js/recommended'],
 	},
+
+	// Browser globals
 	{
 		files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
 		languageOptions: { globals: globals.browser },
 	},
-	tseslint.configs.recommended,
+
+	// TypeScript recommended
+	...tseslint.configs.recommended,
 
 	// React
 	{
@@ -47,27 +64,24 @@ export default defineConfig([
 			'react/react-in-jsx-scope': 'off',
 			'react/prop-types': 'off',
 			'react/no-unknown-property': 'error',
+			// -- Fix overrides
+			// 'react/display-name': 'off',
+			// 'react/no-direct-mutation-state': 'off',
+			// 'react/no-render-return-value': 'off',
+			// 'react/no-string-refs': 'off',
+			// 'react/require-render-return': 'off',
 		},
 	},
 
 	// React hooks
-	pluginReactHooks.configs['recommended-latest'],
+	pluginReactHooks.configs.flat['recommended-latest'],
 
 	// Accessibility
 	{
-		plugins: {
-			'jsx-a11y': pluginJsxA11y,
-		},
+		// ...pluginJsxA11y.flatConfigs.recommended,
 		rules: {
-			'jsx-a11y/alt-text': [
-				'warn',
-				{ elements: ['img'], img: ['Image'] },
-			],
-			'jsx-a11y/aria-props': 'warn',
-			'jsx-a11y/aria-proptypes': 'warn',
-			'jsx-a11y/aria-unsupported-elements': 'warn',
-			'jsx-a11y/role-has-required-aria-props': 'warn',
-			'jsx-a11y/role-supports-aria-props': 'warn',
+			...pluginJsxA11y.flatConfigs.recommended.rules,
+			'jsx-a11y/aria-role': 'off',
 		},
 	},
 
@@ -78,7 +92,7 @@ export default defineConfig([
 		},
 		rules: {
 			'prettier/prettier': [
-				'error',
+				'warn',
 				{
 					printWidth: 80,
 					tabWidth: 4,
@@ -90,7 +104,6 @@ export default defineConfig([
 					endOfLine: 'auto',
 					useTabs: true,
 					jsxSingleQuote: false,
-
 					plugins: ['prettier-plugin-tailwindcss'],
 				},
 			],
@@ -108,24 +121,13 @@ export default defineConfig([
 				'error',
 				{
 					groups: [
-						// Imports com caracteres especiais, como imports de side effects
 						['^\\u0000'],
-
-						// Imports dos frameworks principais, como React e Next.js
 						['^react$', '^next'],
-
-						// Imports de pacotes de terceiros
 						['^@?\\w', 'next-bricks'],
-
-						// Imports organizados por estrutura de projeto e pacotes de terceiros
 						[
-							// Imports de módulos internos do projeto, como utils, components, etc.
 							'^(utils|hooks|types|contexts|components|middlewares|services|styles|config|constants|controllers|helpers|icons|layouts|models|views|theme|themes)(/.*|$)',
-							// Imports com path aliases (começando com '@/')
 							'^@(/.*|$)',
 						],
-
-						// Imports relativos (começando com './' ou '../')
 						[
 							'^\\.',
 							'^\\.\\.(?!/?$)',
@@ -133,17 +135,9 @@ export default defineConfig([
 							'^\\./(?=.*/)(?!/?$)',
 							'^\\./?$',
 						],
-
-						// Imports de arquivos estáticos
 						['^(assets)(/.*|$)'],
-
-						// Imports de estilização
 						['^./styles', '^./.*\\.css$', '^./.*\\.scss$'],
-
-						// Imports absolutos não cobertos pelos grupos anteriores
 						['^[^.]'],
-
-						// Grupo geral de captura para qualquer coisa não capturada anteriormente
 						['^'],
 					],
 				},
@@ -175,7 +169,6 @@ export default defineConfig([
 		rules: {
 			'no-empty-pattern': 'off',
 			'prefer-const': 'error',
-			// só exige uma linha em branco após o bloco de imports
 			'padding-line-between-statements': [
 				'error',
 				{ blankLine: 'always', prev: 'directive', next: '*' },
@@ -183,6 +176,12 @@ export default defineConfig([
 				{ blankLine: 'always', prev: 'import', next: '*' },
 				{ blankLine: 'any', prev: 'import', next: 'import' },
 			],
+		},
+	},
+
+	{
+		settings: {
+			react: { version: '19' }, // Avoids auto-detection crash
 		},
 	},
 ]);

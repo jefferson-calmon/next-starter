@@ -18,6 +18,7 @@ export function chain(
 
 	if (current) {
 		// Chama o próximo middleware na cadeia
+
 		const next = chain(functions, index + 1);
 
 		// O current é uma função que recebe um middleware e retorna outro middleware
