@@ -6,16 +6,16 @@ type Id<TPrefix extends string> = `${TPrefix}_${string}` & {
 	readonly __brand: TPrefix;
 };
 
-// Use 2, 3 or 4 chars per prefix
-const prefixes = {
+const PREFIXES = {
+	// Always use 2, 3 or 4 chars per prefix
 	test: 'tst',
 } as const;
 
-type Prefix = keyof typeof prefixes;
+type Prefix = keyof typeof PREFIXES;
 
 const EPOCH = 1_700_000_000_000; // Nov 2023
 
-export function id<T extends Prefix>(prefix: T): Id<(typeof prefixes)[T]> {
+export function id<T extends Prefix>(prefix: T): Id<(typeof PREFIXES)[T]> {
 	const buf = new Uint8Array(16);
 
 	const t = Date.now() - EPOCH;
@@ -31,7 +31,7 @@ export function id<T extends Prefix>(prefix: T): Id<(typeof prefixes)[T]> {
 
 	crypto.getRandomValues(buf.subarray(6));
 
-	return `${prefixes[prefix]}_${b58.encode(buf)}` as Id<(typeof prefixes)[T]>;
+	return `${PREFIXES[prefix]}_${b58.encode(buf)}` as Id<(typeof PREFIXES)[T]>;
 }
 
 export function extractTimestamp(value: string): Date | null {
@@ -61,6 +61,6 @@ export function extractTimestamp(value: string): Date | null {
 export function isId<T extends Prefix>(
 	value: string,
 	prefix: T,
-): value is Id<(typeof prefixes)[T]> {
-	return value.startsWith(`${prefixes[prefix]}_`);
+): value is Id<(typeof PREFIXES)[T]> {
+	return value.startsWith(`${PREFIXES[prefix]}_`);
 }
