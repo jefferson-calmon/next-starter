@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import * as Routes from '../../.next/dev/types/routes';
+import * as Routes from '../../.next/types/routes';
 
 export type Route = Routes.AppRoutes;
 export type RouteApi = Routes.AppRouteHandlerRoutes;
