@@ -1,5 +1,4 @@
-import { Obj } from 'types';
-import { Trim } from 'types/utils';
+import { ObjectType, Trim } from 'shared/types';
 
 const ERRORS = {
 	// auth: {
@@ -66,7 +65,7 @@ function render<
 	for (const key of Object.keys(params)) {
 		result = result.replace(
 			getOrCreateRegex(key),
-			String((params as Obj)[key]),
+			String((params as ObjectType)[key]),
 		);
 	}
 
