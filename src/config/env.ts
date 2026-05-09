@@ -4,8 +4,8 @@ import { z } from 'zod';
 const server = {};
 
 const client = {
-	NEXT_PUBLIC_BASE_URL: z.string(),
-	NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION_ID: z.string(),
+	NEXT_PUBLIC_BASE_URL: z.url(),
+	NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION_ID: z.string().optional(),
 };
 
 export const env = createEnv({
